@@ -68,6 +68,12 @@ input {
     width: 100%;
 }
 
+.title {
+	text-align: center;
+	width: 100%;
+	margin-bottom:3px;
+}
+
 #container_result {
 	overflow-y:auto;
 	height:300px;
