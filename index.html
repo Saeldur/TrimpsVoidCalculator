@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+	<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-7 noselect">
+			<div class="row">
+				<div class="col-md-6" style="text-align:right">
+					<span>Heirloom drop chance (%): </span><input id="input_heirloom_drop" type="number"></input><br>
+					<span>Achievement bonus (%): </span><input id="input_achievement_bonus" type="number"></input><br>
+					<span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input><br>
+					<span title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200."><span>Void Max Level: </span><input id="input_void_max_level" type="number"></input></span><br>
+					<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
+					<span>Runs: </span><input id="input_runs" type="number"></input><br>
+					<br>
+					<span>Golden Upgrades Void:</span>
+					<div id="container_golden"></div>
+					<div id="btn_add_golden" class="btn btn-default">Add next</div>
+				</div>
+				<div class="col-md-6">
+					<div class="progress">
+						<div id="progress_calculate" class="progress-bar" role="progressbar" style="width:0%"></div>
+						<div id="text_progress_calculate" class="progress-text">0%</div>
+					</div>
+					<span>Final drop chance multiplier: <span id="text_result_drop_chance"></span></span><br>
+					<span>Golden Upgrades frequency: <span id="text_result_golden_interval"></span></span><br>
+					<span>Final Golden Upgrades Void %: <span id="text_result_final_golden_void_prc"></span></span><br>
+					<span>Void Max Level: <span id="text_result_void_max_level"></span></span><br>
+					<span>Target zone: <span id="text_result_target_zone"></span></span><br>
+					<span>Runs: <span id="text_result_runs"></span></span><br><br>
+					<div id="container_result">
+						
+					</div>
+				</div>
+			</div>
+			<div id="btn_calculate" class="btn btn-default" style="width:100%">Calculate</div>
+		</div>
+		<div class="col-md-2"></div>
+	</div>
+
+
+	<script type="text/javascript" src="main.js"></script>
+</body>
+
