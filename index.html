@@ -6,60 +6,62 @@
 </head>
 <body>
 	<div class="title">Trimps Void Map Calculator</div>
-	<div class="row">
-		<div class="col-md-2" id="col_left"></div>
-		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-6 noselect" style="text-align:right">
-					<span>Heirloom drop chance (%): </span><input id="input_heirloom_drop" type="number"></input><br>
-					<span>Achievement bonus (%): </span><input id="input_achievement_bonus" type="number"></input><br>
-					<div style="display:none"><span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input></div>
-					<span title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200."><span>Void Max Level: </span><input id="input_void_max_level" type="number"></input></span><br>
-					<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
-					<span>Runs: </span><input id="input_runs" type="number"></input><br>
-					<br>
-					<span>Golden Upgrades Void: (selected <span id="text_selected_golden_void_prc">0%</span>)</span>
-					<div id="container_golden"></div>
-					<div id="btn_add_golden" class="btn btn-default">Add next</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-2" id="col_left"></div>
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6 noselect" style="text-align:right">
+						<span>Heirloom drop chance (%): </span><input id="input_heirloom_drop" type="number"></input><br>
+						<span>Achievement bonus (%): </span><input id="input_achievement_bonus" type="number"></input><br>
+						<div style="display:none"><span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input></div>
+						<span title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200."><span>Void Max Level: </span><input id="input_void_max_level" type="number"></input></span><br>
+						<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
+						<span>Runs: </span><input id="input_runs" type="number"></input><br>
+						<br>
+						<span>Golden Upgrades Void: (selected <span id="text_selected_golden_void_prc">0%</span>)</span>
+						<div id="container_golden"></div>
+						<div id="btn_add_golden" class="btn btn-default">Add next</div>
+					</div>
+					<div class="col-md-6">
+						<div class="progress">
+							<div id="progress_calculate" class="progress-bar" role="progressbar" style="width:0%"></div>
+							<div id="text_progress_calculate" class="progress-text">0%</div>
+						</div>
+						<span>Final drop chance multiplier: <span id="text_result_drop_chance"></span></span><br>
+						<span>Golden Upgrades frequency: <span id="text_result_golden_interval"></span></span><br>
+						<span>Final Golden Upgrades Void %: <span id="text_result_final_golden_void_prc"></span></span><br>
+						<span>Void Max Level: <span id="text_result_void_max_level"></span></span><br>
+						<span>Target zone: <span id="text_result_target_zone"></span></span><br>
+						<span>Runs: <span id="text_result_runs"></span></span><br><br>
+						<div id="container_result">
+							
+						</div>
+					</div>
 				</div>
-				<div class="col-md-6">
-					<div class="progress">
-						<div id="progress_calculate" class="progress-bar" role="progressbar" style="width:0%"></div>
-						<div id="text_progress_calculate" class="progress-text">0%</div>
-					</div>
-					<span>Final drop chance multiplier: <span id="text_result_drop_chance"></span></span><br>
-					<span>Golden Upgrades frequency: <span id="text_result_golden_interval"></span></span><br>
-					<span>Final Golden Upgrades Void %: <span id="text_result_final_golden_void_prc"></span></span><br>
-					<span>Void Max Level: <span id="text_result_void_max_level"></span></span><br>
-					<span>Target zone: <span id="text_result_target_zone"></span></span><br>
-					<span>Runs: <span id="text_result_runs"></span></span><br><br>
-					<div id="container_result">
-						
-					</div>
+				<div id="btn_calculate" class="btn btn-default" style="width:100%">Calculate</div>
+				<div style="text-align:right">
+					Links: <a href="http://trimps.github.io/">Play Trimps</a> &#8226 <a href="https://www.reddit.com/r/trimps">/r/Trimps</a>
 				</div>
 			</div>
-			<div id="btn_calculate" class="btn btn-default" style="width:100%">Calculate</div>
-			<div style="text-align:right">
-				Links: <a href="http://trimps.github.io/">Play Trimps</a> &#8226 <a href="https://www.reddit.com/r/trimps">/r/Trimps</a>
-			</div>
-		</div>
-		<div class="col-md-2" id="col_right">
-			<div id="btn_help" class="btn btn-default" style="width:100%">Help</div>
-			<div id="desc_help" style="display:none">
-			How to use:
-			<ul>
-			<li>Heirloom drop chance - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
-			<li>Achievement bonus - Your total damage % gained from achievements.</li>
-			<li>Void Max Level - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
-			<li>Target zone - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
-			<li>Runs - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
-			<li>Golden Upgrades Void - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
-			</ul>
-			Few notes on Golden Upgrades:
-			<ul>
-			<li>Because you can't have more than 60% Golden Void %, you can't select a combination of upgrades that exceeds this number.</li>
-			<li>The Final Golden Upgrades Void % on results screen might show a smaller total percentage than selected if the specified target zone does not reach the selected Golden Upgrades</li>
-			</ul>
+			<div class="col-md-2" id="col_right">
+				<div id="btn_help" class="btn btn-default" style="width:100%">Help</div>
+				<div id="desc_help" style="display:none">
+				How to use:
+				<ul>
+				<li>Heirloom drop chance - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
+				<li>Achievement bonus - Your total damage % gained from achievements.</li>
+				<li>Void Max Level - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
+				<li>Target zone - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
+				<li>Runs - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
+				<li>Golden Upgrades Void - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
+				</ul>
+				Few notes on Golden Upgrades:
+				<ul>
+				<li>Because you can't have more than 60% Golden Void %, you can't select a combination of upgrades that exceeds this number.</li>
+				<li>The Final Golden Upgrades Void % on results screen might show a smaller total percentage than selected if the specified target zone does not reach the selected Golden Upgrades</li>
+				</ul>
+				</div>
 			</div>
 		</div>
 	</div>
