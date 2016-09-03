@@ -261,12 +261,31 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	}
 })();
 
-
-
-
-
-
-
+(function() {
+	var btnHelp = document.getElementById("btn_help");
+	var colLeft = document.getElementById("col_left");
+	var colRight = document.getElementById("col_right");
+	var descHelp = document.getElementById("desc_help");
+	
+	var isHelp = false;
+	
+	function onHelp() {
+		if(isHelp) {
+			colRight.className = "col-md-2";
+			colLeft.className = "col-md-2";
+			descHelp.style.display = "none";
+			isHelp = false;
+		}
+		else {
+			colRight.className = "col-md-4";
+			colLeft.className = "";
+			descHelp.style.display = "inherit";
+			isHelp = true;
+		}
+	}
+	
+	btnHelp.onclick = onHelp;
+})();
 
 
 

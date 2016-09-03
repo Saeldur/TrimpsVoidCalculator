@@ -7,13 +7,13 @@
 <body>
 	<div class="title">Trimps Void Map Calculator</div>
 	<div class="row">
-		<div class="col-md-2"></div>
+		<div class="col-md-2" id="col_left"></div>
 		<div class="col-md-8">
 			<div class="row">
 				<div class="col-md-6 noselect" style="text-align:right">
 					<span>Heirloom drop chance (%): </span><input id="input_heirloom_drop" type="number"></input><br>
 					<span>Achievement bonus (%): </span><input id="input_achievement_bonus" type="number"></input><br>
-					<span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input><br>
+					<div style="display:none"><span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input></div>
 					<span title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200."><span>Void Max Level: </span><input id="input_void_max_level" type="number"></input></span><br>
 					<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
 					<span>Runs: </span><input id="input_runs" type="number"></input><br>
@@ -43,7 +43,19 @@
 				Links: <a href="http://trimps.github.io/">Play Trimps</a> &#8226 <a href="https://www.reddit.com/r/trimps">/r/Trimps</a>
 			</div>
 		</div>
-		<div class="col-md-2"></div>
+		<div class="col-md-2" id="col_right">
+			<div id="btn_help" class="btn btn-default" style="width:100%">Help</div>
+			<div id="desc_help" style="display:none">
+			<ul>
+			<li>Heirloom drop chance - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
+			<li>Achievement bonus - Your total damage % gained from achievements.</li>
+			<li>Void Max Level - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
+			<li>Target zone - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
+			<li>Runs - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
+			<li>Golden Upgrades Void - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
+			</ul>
+			</div>
+		</div>
 	</div>
 
 
