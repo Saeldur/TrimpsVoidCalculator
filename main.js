@@ -137,9 +137,24 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 				inputRuns.value = save.runs;
 				
 				l = save.arrGoldenUpgrades.length;
-				for(i = 0; i < l; i++) {
-					onAddGolden(null, save.arrGoldenUpgrades[i]);
+				for(i = l - 1; i >= 0; i--) {
+					if(save.arrGoldenUpgrades[i]) {
+						save.arrGoldenUpgrades = save.arrGoldenUpgrades.slice(0, i + 1);
+						break;
+					}
+					if(i == 0) {
+						save.arrGoldenUpgrades = [];
+						break;
+					}
 				}
+					
+				l = save.arrGoldenUpgrades.length;
+				for(i = 0; i < l; i++)
+					onAddGolden(null, save.arrGoldenUpgrades[i]);
+				
+				if(l < 6)
+					for(i = l; i < 6; i++)
+						onAddGolden(null, false);
 			}
 			else {
 				for(i = 0; i < 6; i++) {
@@ -173,8 +188,6 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			e.target.checked = false;
 		
 		textSelectedGoldenVoidPrc.innerHTML = getSelectedTotalGoldenVoidPercentage() + "%";
-		
-		console.log(e);
 	}
 	
 	function onAddGolden(e, isPreselect) {
