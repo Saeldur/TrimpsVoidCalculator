@@ -111,6 +111,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	var btnCalculate = document.getElementById("btn_calculate");
 	var progressCalculate = document.getElementById("progress_calculate");
 	var textProgressCalculate = document.getElementById("text_progress_calculate");
+	var textSelectedGoldenVoidPrc = document.getElementById("text_selected_golden_void_prc");
 	var containerGolden = document.getElementById("container_golden");
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
@@ -151,21 +152,49 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 		}
 	})();
 	
+	textSelectedGoldenVoidPrc.innerHTML = getSelectedTotalGoldenVoidPercentage() + "%";
+	
 	btnAddGolden.onclick = onAddGolden;
 	btnCalculate.onclick = onCalculate;
 	
+	function getSelectedTotalGoldenVoidPercentage() {
+		var i, l = inputGoldenArr.length, total = 0;
+		for(i = 0; i < l; i++) {
+			if(inputGoldenArr[i].checked)
+				total += (i + 1) * 2;
+		}
+		return total;
+	}
+	
+	function onGoldenStateChange(e) {
+		var total = getSelectedTotalGoldenVoidPercentage();
+		
+		if(e.target.checked && total > 60)
+			e.target.checked = false;
+		
+		textSelectedGoldenVoidPrc.innerHTML = getSelectedTotalGoldenVoidPercentage() + "%";
+		
+		console.log(e);
+	}
+	
 	function onAddGolden(e, isPreselect) {
+		var prc = ((inputGoldenArr.length + 1) * 2);
+		if(prc > 60)
+			return;
+		
 		var span = document.createElement("span");
 		var input = document.createElement("input");
 		var br = document.createElement("br");
 		
-		span.innerHTML = ((inputGoldenArr.length + 1) * 2) + "% ";
+		span.innerHTML = prc + "% ";
 		input.type = "checkbox";
 		
 		if(isPreselect)
 			input.checked = true;
 		
 		inputGoldenArr.push(input);
+		
+		input.onchange = onGoldenStateChange;
 		
 		containerGolden.appendChild(span);
 		containerGolden.appendChild(input);

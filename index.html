@@ -18,7 +18,7 @@
 					<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
 					<span>Runs: </span><input id="input_runs" type="number"></input><br>
 					<br>
-					<span>Golden Upgrades Void:</span>
+					<span>Golden Upgrades Void: (selected <span id="text_selected_golden_void_prc">0%</span>)</span>
 					<div id="container_golden"></div>
 					<div id="btn_add_golden" class="btn btn-default">Add next</div>
 				</div>
@@ -46,6 +46,7 @@
 		<div class="col-md-2" id="col_right">
 			<div id="btn_help" class="btn btn-default" style="width:100%">Help</div>
 			<div id="desc_help" style="display:none">
+			How to use:
 			<ul>
 			<li>Heirloom drop chance - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
 			<li>Achievement bonus - Your total damage % gained from achievements.</li>
@@ -53,6 +54,11 @@
 			<li>Target zone - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
 			<li>Runs - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
 			<li>Golden Upgrades Void - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
+			</ul>
+			Few notes on Golden Upgrades:
+			<ul>
+			<li>Because you can't have more than 60% Golden Void %, you can't select a combination of upgrades that exceeds this number.</li>
+			<li>The Final Golden Upgrades Void % on results screen might show a smaller total percentage than selected if the specified target zone does not reach the selected Golden Upgrades</li>
 			</ul>
 			</div>
 		</div>
