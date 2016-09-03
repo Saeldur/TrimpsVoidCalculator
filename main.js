@@ -120,6 +120,9 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	var inputRuns = document.getElementById("input_runs");
 	var inputGoldenArr = [];
 	
+	var mainTimeout = null;
+	var simulator = null;
+	
 	(function() {
 		try {
 			var save = JSON.parse(localStorage.getItem("cache"));
@@ -170,6 +173,16 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	}
 	
 	function onCalculate(e) {
+		if(mainTimeout) {
+			clearTimeout(mainTimeout);
+			mainTimeout = null;
+			onFinalize();
+			
+			btnCalculate.innerHTML = "Calculate";
+			return;
+		}
+		btnCalculate.innerHTML = "Stop";
+		
 		var heirloomDrop 		= Number(inputHeirloomDrop.value);
 		var achievementBonus 	= Number(inputAchievementBonus.value);
 		var highestZone 		= parseInt(inputHighestZone.value);
@@ -199,15 +212,21 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			console.warn(e);
 		}
 		
-		var simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades);
+		simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades);
 		
 		function onNextFrame(loops) {
 			simulator.run(loops);
 		}
 		function onFinalize() {
+			resetProgressBar();
+			if(simulator) {
+				simulator.finalize();
+				simulator = null;
+			}
+		}
+		function resetProgressBar() {
 			progressCalculate.style.width = "0%";
 			textProgressCalculate.innerHTML = "0%";
-			simulator.finalize();
 		}
 		
 		(function() {
@@ -224,7 +243,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 				i -= loopsPerFrame;
 				
 				if(i > 0) {
-					setTimeout(
+					mainTimeout = setTimeout(
 						(function(loops) {
 							return function() {
 								onTimeout(loops);
