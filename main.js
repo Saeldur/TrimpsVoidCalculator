@@ -219,10 +219,12 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 		}
 		function onFinalize() {
 			resetProgressBar();
+			mainTimeout = null;
 			if(simulator) {
 				simulator.finalize();
 				simulator = null;
 			}
+			btnCalculate.innerHTML = "Calculate";
 		}
 		function resetProgressBar() {
 			progressCalculate.style.width = "0%";
