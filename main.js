@@ -170,12 +170,12 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	}
 	
 	function onCalculate(e) {
-		var heirloomDrop = inputHeirloomDrop.value;
-		var achievementBonus = inputAchievementBonus.value;
-		var highestZone = inputHighestZone.value;
-		var voidMaxLevel = inputVoidMaxLevel.value;
-		var targetZone = inputTargetZone.value;
-		var runs = inputRuns.value;
+		var heirloomDrop 		= Number(inputHeirloomDrop.value);
+		var achievementBonus 	= Number(inputAchievementBonus.value);
+		var highestZone 		= parseInt(inputHighestZone.value);
+		var voidMaxLevel 		= parseInt(inputVoidMaxLevel.value);
+		var targetZone 			= parseInt(inputTargetZone.value);
+		var runs 				= parseInt(inputRuns.value);
 		var arrGoldenUpgrades = [];
 		(function() {
 			var i, l = inputGoldenArr.length;
