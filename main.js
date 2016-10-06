@@ -32,6 +32,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	var runsAmount = 0;
 	var arrOfAmounts = {};
 	
+	voidMaxLevel = targetZone > voidMaxLevel ? targetZone : voidMaxLevel;
 	max = voidMaxLevel > 200 ? 200 : voidMaxLevel;
 	
 	this.run = function(loops) {
@@ -44,10 +45,6 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			seed = Math.floor(Math.random() * 1000000);
 			
 			for(i = 1; i < targetZone; i++) {
-				if(max < i){
-					max = i;
-				}
-				
 				if(goldenInterval != -1 && i % goldenInterval == 0) {
 					if(arrGoldenUpgrades[i / goldenInterval - 1]) {
 						goldenBonus += 0.02 * (i / goldenInterval);
