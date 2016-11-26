@@ -106,10 +106,13 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 
 	var btnAddGolden = document.getElementById("btn_add_golden");
 	var btnCalculate = document.getElementById("btn_calculate");
+	var btnSavePull = document.getElementById("btn_save_pull");
+	var btnSaveClear = document.getElementById("btn_save_clear");
 	var progressCalculate = document.getElementById("progress_calculate");
 	var textProgressCalculate = document.getElementById("text_progress_calculate");
 	var textSelectedGoldenVoidPrc = document.getElementById("text_selected_golden_void_prc");
 	var containerGolden = document.getElementById("container_golden");
+	var inputSaveExport = document.getElementById("input_save_export");
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
 	var inputHighestZone = document.getElementById("input_highest_zone");
@@ -168,6 +171,49 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	
 	btnAddGolden.onclick = onAddGolden;
 	btnCalculate.onclick = onCalculate;
+	
+	btnSavePull.onclick = function(e) {
+		var i, j, l, temp;
+		var game = JSON.parse(LZString.decompressFromBase64(inputSaveExport.value));
+		
+		temp = 0;
+		l = game.global.ShieldEquipped.mods.length;
+		for(i = 0; i < l; i++) {
+			if(game.global.ShieldEquipped.mods[i][0] === "voidMaps") {
+				temp = Number(game.global.ShieldEquipped.mods[i][1]);
+				break;
+			}
+		}
+		inputHeirloomDrop.value = temp;
+		inputAchievementBonus.value = Number(game.global.achievementBonus);
+		//inputHighestZone.value = Number(game.global.highestLevelCleared + 1);
+		inputVoidMaxLevel.value = Number(game.global.voidMaxLevel);
+		inputTargetZone.value = Number(game.global.world);
+		
+		l = inputGoldenArr.length;
+		for(i = 0; i < l; i++) {
+			inputGoldenArr[i].checked = false;
+		}
+		
+		l = game.goldenUpgrades.Void.purchasedAt.length;
+		for(i = 0; i < l; i++) {
+			for(j = 0; j < 10; j++) {
+				if(inputGoldenArr[game.goldenUpgrades.Void.purchasedAt[i]] !== undefined) {
+					inputGoldenArr[game.goldenUpgrades.Void.purchasedAt[i]].checked = true;
+				}
+				else {
+					onAddGolden(e, false);
+				}
+			}
+		}
+		
+		onGoldenStateChange(e);
+		
+	}
+	
+	btnSaveClear.onclick = function() {
+		inputSaveExport.value = "";
+	}
 	
 	function getSelectedTotalGoldenVoidPercentage() {
 		var i, l = inputGoldenArr.length, total = 0;
