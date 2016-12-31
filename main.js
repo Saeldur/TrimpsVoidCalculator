@@ -1,4 +1,4 @@
-function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades) {
+function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestLevelCleared) {
 	var textResultDropChance = document.getElementById("text_result_drop_chance");
 	var textResultGoldenInterval = document.getElementById("text_result_golden_interval");
 	var textResultFinalGoldenVoidPrc = document.getElementById("text_result_final_golden_void_prc");
@@ -32,8 +32,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	var runsAmount = 0;
 	var arrOfAmounts = {};
 	
-	voidMaxLevel = targetZone > voidMaxLevel ? targetZone : voidMaxLevel;
-	max = voidMaxLevel > 200 ? 200 : voidMaxLevel;
+	var _voidMaxLevel;
 	
 	this.run = function(loops) {
 		runsAmount += loops;
@@ -44,6 +43,8 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			drops = 0;
 			seed = Math.floor(Math.random() * 1000000);
 			
+			_voidMaxLevel = voidMaxLevel;
+			
 			for(i = 1; i < targetZone; i++) {
 				if(goldenInterval != -1 && i % goldenInterval == 0) {
 					if(arrGoldenUpgrades[i / goldenInterval - 1]) {
@@ -52,6 +53,19 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 				}
 				
 				for(j = 0; j < 100; j++) {
+					max = _voidMaxLevel;
+					if(_voidMaxLevel < i) {
+						_voidMaxLevel = i;
+						if((lastPortal + 25) < i)
+							_voidMaxLevel = highestLevelCleared;
+					}
+					if ((max - lastPortal) < 25) {
+						max = lastPortal;
+					}
+					
+					//console.log(max);
+					
+					if(max > 200) max = 200;
 					min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
 					min *= (1 - heirloomPrc);
 					min *= (1 - goldenBonus);
@@ -122,6 +136,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
 	var inputHighestZone = document.getElementById("input_highest_zone");
+	var inputLastPortal = document.getElementById("input_last_portal");
 	var inputVoidMaxLevel = document.getElementById("input_void_max_level");
 	var inputTargetZone = document.getElementById("input_target_zone");
 	var inputRuns = document.getElementById("input_runs");
@@ -138,6 +153,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 				inputHeirloomDrop.value = save.heirloomDrop;
 				inputAchievementBonus.value = save.achievementBonus;
 				inputHighestZone.value = save.highestZone;
+				inputLastPortal.value = save.lastPortal;
 				inputVoidMaxLevel.value = save.voidMaxLevel;
 				inputTargetZone.value = save.targetZone;
 				inputRuns.value = save.runs;
@@ -192,7 +208,8 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 		}
 		inputHeirloomDrop.value = temp;
 		inputAchievementBonus.value = Number(game.global.achievementBonus);
-		//inputHighestZone.value = Number(game.global.highestLevelCleared + 1);
+		inputHighestZone.value = Number(game.global.highestLevelCleared + 1);
+		inputLastPortal.value = Number(game.global.lastPortal);
 		inputVoidMaxLevel.value = Number(game.global.voidMaxLevel);
 		inputTargetZone.value = Number(game.global.world);
 		
@@ -277,6 +294,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 		var heirloomDrop 		= Number(inputHeirloomDrop.value);
 		var achievementBonus 	= Number(inputAchievementBonus.value);
 		var highestZone 		= parseInt(inputHighestZone.value);
+		var lastPortal			= parseInt(inputLastPortal.value);
 		var voidMaxLevel 		= parseInt(inputVoidMaxLevel.value);
 		var targetZone 			= parseInt(inputTargetZone.value);
 		var runs 				= parseInt(inputRuns.value);
@@ -294,6 +312,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 				achievementBonus : achievementBonus,
 				highestZone : highestZone,
 				voidMaxLevel : voidMaxLevel,
+				lastPortal : lastPortal,
 				targetZone : targetZone,
 				runs : runs,
 				arrGoldenUpgrades : arrGoldenUpgrades
@@ -303,7 +322,7 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			console.warn(e);
 		}
 		
-		simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades);
+		simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestZone - 1);
 		
 		function onNextFrame(loops) {
 			simulator.run(loops);

@@ -10,6 +10,21 @@ textarea {
 	border-color: gray;
 }
 
+code {
+	background-color: black;
+}
+
+.h1, h1 {
+	font-size: inherit;
+	margin-bottom: 3px;
+	font-weight: bold;
+	color: #8284ff;
+}
+
+li b {
+	color: #c879ff;
+}
+
 .noselect {
 	-webkit-touch-callout: none;
 	-webkit-user-select: none;

@@ -16,7 +16,8 @@
 						<div id="btn_save_pull" class="btn btn-default">Confirm save</div><div id="btn_save_clear" class="btn btn-default">Clear</div><br><br>
 						<span>Heirloom drop chance (%): </span><input id="input_heirloom_drop" type="number" step="0.1"></input><br>
 						<span>Achievement bonus (%): </span><input id="input_achievement_bonus" type="number" step="0.1"></input><br>
-						<div style="display:none"><span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input></div>
+						<div><span>Highest zone reached: </span><input id="input_highest_zone" type="number"></input></div>
+						<div><span>Zone reached previous run: </span><input id="input_last_portal" type="number"></input></div>
 						<span title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200."><span>Void Max Level: </span><input id="input_void_max_level" type="number"></input></span><br>
 						<span>Target zone: </span><input id="input_target_zone" type="number"></input><br>
 						<span>Runs: </span><input id="input_runs" type="number" value="10000"></input><br>
@@ -49,20 +50,24 @@
 			<div class="col-md-2" id="col_right">
 				<div id="btn_help" class="btn btn-default" style="width:100%">Help</div>
 				<div id="desc_help" style="display:none">
-				How to use:
+				<h1>How to use:</h1>
 				<ul>
-				<li>Heirloom drop chance - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
-				<li>Achievement bonus - Your total damage % gained from achievements.</li>
-				<li>Void Max Level - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
-				<li>Target zone - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
-				<li>Runs - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
-				<li>Golden Upgrades Void - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
+				<li><b>Heirloom drop chance</b> - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
+				<li><b>Achievement bonus</b> - Your total damage % gained from achievements.</li>
+				<li><b>Highest zone reached</b> - Highest zone from Stats -> Total</li>
+				<li><b>Zone reached previous run</b> - The zone at which you used the Portal previous run. The calculator will assume this was the last run every simulated run.</li>
+				<li><b>Void Max Level</b> - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
+				<li><b>Target zone</b> - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
+				<li><b>Runs</b> - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
+				<li><b>Golden Upgrades Void</b> - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
 				</ul>
-				Few notes on Golden Upgrades:
+				<h1>Few notes on Golden Upgrades:</h1>
 				<ul>
 				<li>Because you can't have more than 60% Golden Void %, you can't select a combination of upgrades that exceeds this number.</li>
 				<li>The Final Golden Upgrades Void % on results screen might show a smaller total percentage than selected if the specified target zone does not reach the selected Golden Upgrades</li>
 				</ul>
+				<h1>About Void Max Level and importing save:</h1>
+				<ul>This value can be artificially reduced by doing repeated runs to much lower levels than highest zone reached. Then, once you do a normal run, this number will gradually increase. Importing a save to this calculator at the end of such run will provide inaccurate results. If you're intending on using this exploit, if you want accurate representation of the drops, get the value of Void Max Level at the very start of the run, by typing <code>game.global.voidMaxLevel</code> into the console, and use that in the calculator.
 				</div>
 			</div>
 		</div>
