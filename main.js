@@ -78,9 +78,11 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 			else
 				arrOfAmounts[drops]++;
 		}
+		
+		this.updateSwitches();
 	}
 	
-	this.finalize = function() {
+	this.updateSwitches = function() {
 		textResultDropChance.innerHTML = ((1 - heirloomPrc) * (1 - goldenBonus));
 		textResultGoldenInterval.innerHTML = goldenInterval ? goldenInterval : "none";
 		textResultFinalGoldenVoidPrc.innerHTML = goldenBonus * 100;
@@ -88,11 +90,15 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 		textResultTargetZone.innerHTML = targetZone;
 		textResultRuns.innerHTML = runsAmount;
 		
-		containerResult.innerHTML = "Average drops: " + total / runsAmount + " (min: " + minimum + ", max: " + maximum + ")<br><br>";
+		containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>";
 		var i;
 		for(i in arrOfAmounts)
 			if(arrOfAmounts[i] > 0)
 				containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
+	}
+	
+	this.finalize = function() {
+		this.updateSwitches();
 	}
 	
 	function seededRandom(seed){
