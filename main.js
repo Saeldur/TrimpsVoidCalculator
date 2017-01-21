@@ -10,7 +10,10 @@ function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrG
 	heirloomPrc = heirloomPrc / 100;
 	
 	var goldenInterval = -1;
-	if(achievementBonus >= 1000)
+	
+	if(achievementBonus >= 2000)
+		goldenInterval = 25;
+	else if(achievementBonus >= 1000)
 		goldenInterval = 30;
 	else if(achievementBonus >= 600)
 		goldenInterval = 35;
