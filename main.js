@@ -117,7 +117,7 @@
 			textResultTargetZone.innerHTML = targetZone;
 			textResultRuns.innerHTML = runsAmount;
 			
-			containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br>";
+			containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br><br>";
 			var i;
 			for(i in arrOfAmounts)
 				if(arrOfAmounts[i] > 0)
