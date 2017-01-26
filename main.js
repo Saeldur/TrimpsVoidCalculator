@@ -1,128 +1,143 @@
-function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestLevelCleared) {
-	var textResultDropChance = document.getElementById("text_result_drop_chance");
-	var textResultGoldenInterval = document.getElementById("text_result_golden_interval");
-	var textResultFinalGoldenVoidPrc = document.getElementById("text_result_final_golden_void_prc");
-	var textResultVoidMaxLevel = document.getElementById("text_result_void_max_level");
-	var textResultTargetZone = document.getElementById("text_result_target_zone");
-	var textResultRuns = document.getElementById("text_result_runs");
-	var containerResult = document.getElementById("container_result");
-	
-	heirloomPrc = heirloomPrc / 100;
-	
-	var goldenInterval = -1;
-	
-	if(achievementBonus >= 2000)
-		goldenInterval = 25;
-	else if(achievementBonus >= 1000)
-		goldenInterval = 30;
-	else if(achievementBonus >= 600)
-		goldenInterval = 35;
-	else if(achievementBonus >= 300)
-		goldenInterval = 40;
-	else if(achievementBonus >= 100)
-		goldenInterval = 45;
-	else if(achievementBonus >= 15)
-		goldenInterval = 50;
-	
-	var h, i, j;
-	var min, max;
-	var drops, seed;
-	var lastVoidMap = 0;
-	var goldenBonus = 0;
-	var total = 0;
-	var minimum = Number.MAX_VALUE;
-	var maximum = 0;
-	var runsAmount = 0;
-	var arrOfAmounts = {};
-	
-	var _voidMaxLevel;
-	
-	this.run = function(loops) {
-		runsAmount += loops;
+;var Simulator = (function() {
+	function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestLevelCleared) {
+		var textResultDropChance = document.getElementById("text_result_drop_chance");
+		var textResultGoldenInterval = document.getElementById("text_result_golden_interval");
+		var textResultFinalGoldenVoidPrc = document.getElementById("text_result_final_golden_void_prc");
+		var textResultVoidMaxLevel = document.getElementById("text_result_void_max_level");
+		var textResultTargetZone = document.getElementById("text_result_target_zone");
+		var textResultRuns = document.getElementById("text_result_runs");
+		var containerResult = document.getElementById("container_result");
 		
-		for(h = 0; h < loops; h++) {
-			lastVoidMap = 0;
-			goldenBonus = 0;
-			drops = 0;
-			seed = Math.floor(Math.random() * 1000000);
+		heirloomPrc = heirloomPrc / 100;
+		
+		var goldenInterval = -1;
+		
+		if(achievementBonus >= 2000)
+			goldenInterval = 25;
+		else if(achievementBonus >= 1000)
+			goldenInterval = 30;
+		else if(achievementBonus >= 600)
+			goldenInterval = 35;
+		else if(achievementBonus >= 300)
+			goldenInterval = 40;
+		else if(achievementBonus >= 100)
+			goldenInterval = 45;
+		else if(achievementBonus >= 15)
+			goldenInterval = 50;
+		
+		var h, i, j;
+		var min, max;
+		var drops, seed;
+		var lastVoidMap = 0;
+		var goldenBonus = 0;
+		var total = 0;
+		var minimum = Number.MAX_VALUE;
+		var maximum = 0;
+		var runsAmount = 0;
+		var arrOfAmounts = {};
+		var fastestVoidDropInSingleRunInCells = Number.MAX_VALUE;
+		
+		var _voidMaxLevel;
+		
+		this.run = function(loops) {
+			runsAmount += loops;
 			
-			_voidMaxLevel = voidMaxLevel;
-			
-			for(i = 1; i < targetZone; i++) {
-				if(goldenInterval != -1 && i % goldenInterval == 0) {
-					if(arrGoldenUpgrades[i / goldenInterval - 1]) {
-						goldenBonus += 0.02 * (i / goldenInterval);
+			for(h = 0; h < loops; h++) {
+				lastVoidMap = 0;
+				goldenBonus = 0;
+				drops = 0;
+				seed = Math.floor(Math.random() * 1000000);
+				
+				_voidMaxLevel = voidMaxLevel;
+				
+				for(i = 1; i < targetZone; i++) {
+					if(goldenInterval != -1 && i % goldenInterval == 0) {
+						if(arrGoldenUpgrades[i / goldenInterval - 1]) {
+							goldenBonus += 0.02 * (i / goldenInterval);
+						}
+					}
+					
+					for(j = 0; j < 100; j++) {
+						max = _voidMaxLevel;
+						if(_voidMaxLevel < i) {
+							_voidMaxLevel = i;
+							if((lastPortal + 25) < i)
+								_voidMaxLevel = highestLevelCleared;
+						}
+						if ((max - lastPortal) < 25) {
+							max = lastPortal;
+						}
+						
+						//console.log(max);
+						
+						if(max > 200) max = 200;
+						min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
+						min *= (1 - heirloomPrc);
+						min *= (1 - goldenBonus);
+						
+						var chance = (Math.floor((lastVoidMap - min) / 10) / 50000);
+						lastVoidMap++;
+						
+						if(chance < 0)
+							continue;
+						if(Simulator.seededRandom(seed++) >= chance)
+							continue;
+						
+						
+						lastVoidMap = 0;
+						drops++;
+						
+						var cell = ((i - 1) * 100) + j;
+						if(cell < fastestVoidDropInSingleRunInCells)
+							fastestVoidDropInSingleRunInCells = cell;
+						
 					}
 				}
 				
-				for(j = 0; j < 100; j++) {
-					max = _voidMaxLevel;
-					if(_voidMaxLevel < i) {
-						_voidMaxLevel = i;
-						if((lastPortal + 25) < i)
-							_voidMaxLevel = highestLevelCleared;
-					}
-					if ((max - lastPortal) < 25) {
-						max = lastPortal;
-					}
-					
-					//console.log(max);
-					
-					if(max > 200) max = 200;
-					min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
-					min *= (1 - heirloomPrc);
-					min *= (1 - goldenBonus);
-					
-					var chance = (Math.floor((lastVoidMap - min) / 10) / 50000);
-					lastVoidMap++;
-					if(chance < 0)
-						continue;
-					if(seededRandom(seed++) >= chance)
-						continue;
-					lastVoidMap = 0;
-					drops++;
-				}
+				total += drops;
+				if(minimum > drops)
+					minimum = drops;
+				if(maximum < drops)
+					maximum = drops;
+				
+				if(typeof arrOfAmounts[drops] == "undefined")
+					arrOfAmounts[drops] = 1;
+				else
+					arrOfAmounts[drops]++;
 			}
 			
-			total += drops;
-			if(minimum > drops)
-				minimum = drops;
-			if(maximum < drops)
-				maximum = drops;
-			
-			if(typeof arrOfAmounts[drops] == "undefined")
-				arrOfAmounts[drops] = 1;
-			else
-				arrOfAmounts[drops]++;
+			this.updateSwitches();
 		}
 		
-		this.updateSwitches();
-	}
-	
-	this.updateSwitches = function() {
-		textResultDropChance.innerHTML = ((1 - heirloomPrc) * (1 - goldenBonus));
-		textResultGoldenInterval.innerHTML = goldenInterval ? goldenInterval : "none";
-		textResultFinalGoldenVoidPrc.innerHTML = goldenBonus * 100;
-		textResultVoidMaxLevel.innerHTML = max;
-		textResultTargetZone.innerHTML = targetZone;
-		textResultRuns.innerHTML = runsAmount;
+		this.updateSwitches = function() {
+			textResultDropChance.innerHTML = ((1 - heirloomPrc) * (1 - goldenBonus));
+			textResultGoldenInterval.innerHTML = goldenInterval ? goldenInterval : "none";
+			textResultFinalGoldenVoidPrc.innerHTML = goldenBonus * 100;
+			textResultVoidMaxLevel.innerHTML = max;
+			textResultTargetZone.innerHTML = targetZone;
+			textResultRuns.innerHTML = runsAmount;
+			
+			containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br>";
+			var i;
+			for(i in arrOfAmounts)
+				if(arrOfAmounts[i] > 0)
+					containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
+		}
 		
-		containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>";
-		var i;
-		for(i in arrOfAmounts)
-			if(arrOfAmounts[i] > 0)
-				containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
+		this.finalize = function() {
+			this.updateSwitches();
+		}
 	}
-	
-	this.finalize = function() {
-		this.updateSwitches();
-	}
-	
-	function seededRandom(seed){
+
+	Simulator.seededRandom = function(seed) {
 		var x = Math.sin(seed++) * 10000;
-		return (x - Math.floor(x));
+		return x - Math.floor(x);
+		//the game updated to use parseFloat and toFixed, however, it's ludicrously slow, so I can't include it
+		//return parseFloat((x - Math.floor(x)).toFixed(7));
 	}
-}
+	
+	return Simulator;
+})();
 
 (function() {
 	var loopsPerFrame = 100;
