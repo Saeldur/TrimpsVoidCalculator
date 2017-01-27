@@ -1,4 +1,27 @@
-;var Simulator = (function() {
+;var Util = {};
+
+Util.getPieChartColors = function(items) {
+	var arr = [];
+	
+	var r = 140;
+	var g = 0;
+	var b = 255;
+	
+	var i;
+	
+	var step = Math.floor(255 / items);
+	var step2 = Math.floor((255 - 140) / items);
+	
+	for(i = 0; i < items; i++) {
+		arr[i] = "rgba(" + (255 - (i * step2)) + "," + (255 - (i * step)) + "," + b + ", 0.8)";
+	}
+	
+	return arr;
+}
+
+Object.freeze(Util);
+
+var Simulator = (function() {
 	function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestLevelCleared) {
 		var textResultDropChance = document.getElementById("text_result_drop_chance");
 		var textResultGoldenInterval = document.getElementById("text_result_golden_interval");
@@ -7,6 +30,30 @@
 		var textResultTargetZone = document.getElementById("text_result_target_zone");
 		var textResultRuns = document.getElementById("text_result_runs");
 		var containerResult = document.getElementById("container_result");
+		var canvasPieDrops = document.getElementById("canvas_pie_drops");
+		
+		var chartPieDrops = new Chart (canvasPieDrops, {
+			type: "bar",
+			data: {
+				labels: [],
+				datasets: [{
+					label: 'VM drop',
+					data: [],
+					backgroundColor: [],
+					borderColor: ["black"],
+					borderWidth: 1
+				}]
+			},
+			options: {
+				scales: {
+					yAxes: [{
+						ticks: {
+							beginAtZero:true
+						}
+					}]
+				}
+			}
+		});
 		
 		heirloomPrc = heirloomPrc / 100;
 		
@@ -68,8 +115,6 @@
 							max = lastPortal;
 						}
 						
-						//console.log(max);
-						
 						if(max > 200) max = 200;
 						min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
 						min *= (1 - heirloomPrc);
@@ -118,10 +163,58 @@
 			textResultRuns.innerHTML = runsAmount;
 			
 			containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br><br>";
+			/*
 			var i;
 			for(i in arrOfAmounts)
 				if(arrOfAmounts[i] > 0)
 					containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
+				
+			*/
+			//remember when this simulation used to run fast?
+			//i member
+			var _data = chartPieDrops.config.data;
+			var labels = _data.labels;
+			var _dataset = _data.datasets[0];
+			var data = _dataset.data;
+			var i;
+			
+			var isUpdateColors = false;
+			
+			for(i in arrOfAmounts) {
+				var item = arrOfAmounts[i];
+				
+				var index = labels.indexOf(i);
+				if(index === -1) {
+					labels.push(i);
+					labels = labels.sort(function(a, b) {
+						return a - b;
+					});
+					
+					isUpdateColors = true;
+				}
+			}
+			
+			if(isUpdateColors) {
+				var l = labels.length;
+				_dataset.backgroundColor = Util.getPieChartColors(l);
+				for(i = 0; i < l; i++) {
+					_dataset.borderColor[i] = "black";
+				}
+			}
+			
+			var l = labels.length;
+			for(i = 0; i < l; i++) {
+				data[i] = arrOfAmounts[labels[i]];
+			}
+			
+			
+			chartPieDrops.update();
+		}
+		
+		//damn you chart.js
+		this.destroy = function() {
+			console.log("test");
+			chartPieDrops.destroy();
 		}
 		
 		this.finalize = function() {
@@ -140,7 +233,7 @@
 })();
 
 (function() {
-	var loopsPerFrame = 100;
+	var loopsPerFrame = 10;
 
 	var btnAddGolden = document.getElementById("btn_add_golden");
 	var btnCalculate = document.getElementById("btn_calculate");
@@ -340,6 +433,9 @@
 			console.warn(e);
 		}
 		
+		if(simulator !== null)
+			simulator.destroy();
+		
 		simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestZone - 1);
 		
 		function onNextFrame(loops) {
@@ -350,7 +446,6 @@
 			mainTimeout = null;
 			if(simulator) {
 				simulator.finalize();
-				simulator = null;
 			}
 			btnCalculate.innerHTML = "Calculate";
 		}
