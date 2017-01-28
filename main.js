@@ -19,6 +19,27 @@ Util.getPieChartColors = function(items) {
 	return arr;
 }
 
+Util.swapClass = function(prefix, newClass, elem) {
+	if (elem === null) {
+		console.log("swapClass, No element found");
+		return;
+	}
+	var className = elem.className;
+	if(typeof className.split('newClass')[1] !== 'undefined') return;
+	className = className.split(prefix);
+	if(typeof className[1] === 'undefined') {
+		console.log("swapClass function error: Tried to replace a class that doesn't exist at [" + elem.className + "] using " + prefix + " as prefix and " + newClass + " as target class.");
+		elem.className += " " + newClass;
+		return;
+	} 
+	var classEnd = className[1].indexOf(' ');
+	if (classEnd >= 0)
+		className = className[0] + newClass + className[1].slice(classEnd, className[1].length);
+	else
+		className = className[0] + newClass;
+	elem.className = className;
+}
+
 Object.freeze(Util);
 
 var Simulator = (function() {
@@ -304,8 +325,13 @@ var Simulator = (function() {
 	
 	btnAddGolden.onclick = onAddGolden;
 	btnCalculate.onclick = onCalculate;
+	inputSaveExport.oninput = function() {
+		Util.swapClass("btn-border-", "btn-border-clickme", btnSavePull);
+	}
 	
 	btnSavePull.onclick = function(e) {
+		Util.swapClass("btn-border-", "btn-border-none", btnSavePull);
+		
 		var i, j, l, temp;
 		var game = JSON.parse(LZString.decompressFromBase64(inputSaveExport.value));
 		
@@ -346,6 +372,8 @@ var Simulator = (function() {
 	}
 	
 	btnSaveClear.onclick = function() {
+		Util.swapClass("btn-border-", "btn-border-none", btnSavePull);
+		
 		inputSaveExport.value = "";
 	}
 	
