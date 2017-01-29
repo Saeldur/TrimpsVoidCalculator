@@ -400,7 +400,6 @@ var Simulator = (function() {
 							elem.checked = true;
 						}
 					});
-					onFormRadioModeChange();
 				}
 				if(save.heirloomPrc !== undefined) 		inputHeirloomDrop.value = save.heirloomPrc;
 				if(save.achievementBonus !== undefined) inputAchievementBonus.value = save.achievementBonus;
@@ -444,6 +443,8 @@ var Simulator = (function() {
 			console.warn(e);
 		}
 	})();
+	
+	onFormRadioModeChange();
 	
 	textSelectedGoldenVoidPrc.innerHTML = getSelectedTotalGoldenVoidPercentage() + "%";
 	
