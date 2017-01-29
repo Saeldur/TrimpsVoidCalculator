@@ -43,7 +43,49 @@ Util.swapClass = function(prefix, newClass, elem) {
 Object.freeze(Util);
 
 var Simulator = (function() {
-	function Simulator(heirloomPrc, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestLevelCleared) {
+	/*
+		data : {
+			mode // "voids" or "zones"
+			heirloomPrc
+			achievementBonus
+			highestLevelCleared
+			lastPortal
+			voidMaxLevel
+			arrGoldenUpgrades
+			targetVoidMapsInRestOfRun	//if mode === "zones"
+			lastVoidMap					//if mode === "zones"
+			startZone					//if mode === "zones"
+			startCell					//if mode === "zones"
+		}
+	*/
+	function Simulator(data) {
+		var mode = data.mode;
+		
+		var heirloomPrc = data.heirloomPrc;
+		var achievementBonus = data.achievementBonus;
+		var highestLevelCleared = data.highestLevelCleared;
+		var lastPortal = data.lastPortal;
+		var voidMaxLevel = data.voidMaxLevel;
+		var arrGoldenUpgrades = data.arrGoldenUpgrades;
+		
+		console.log(voidMaxLevel);
+		
+		var lastVoidMap = 0;
+		var startZone = 1;
+		var startCell = 0;
+		var targetVoidMapsInRestOfRun = 1;
+		var targetZone = data.targetZone;
+		
+		if(mode === "zones") {
+			lastVoidMap = data.lastVoidMap;
+			startZone = data.startZone;
+			startCell = data.startCell;
+			targetVoidMapsInRestOfRun = data.targetVoidMapsInRestOfRun;
+			targetZone = 1000;
+		}
+		
+		
+		
 		var textResultDropChance = document.getElementById("text_result_drop_chance");
 		var textResultGoldenInterval = document.getElementById("text_result_golden_interval");
 		var textResultFinalGoldenVoidPrc = document.getElementById("text_result_final_golden_void_prc");
@@ -96,82 +138,129 @@ var Simulator = (function() {
 		var h, i, j;
 		var min, max;
 		var drops, seed;
-		var lastVoidMap = 0;
 		var goldenBonus = 0;
-		var total = 0;
+		var totalDrops = 0;
+		
 		var minimum = Number.MAX_VALUE;
 		var maximum = 0;
 		var runsAmount = 0;
 		var arrOfAmounts = {};
 		var fastestVoidDropInSingleRunInCells = Number.MAX_VALUE;
 		
+		var arrOfZones = {};
+		var zoneCount = 0;
+		var totalZones = 0;
+		
 		var _voidMaxLevel;
+		var _lastVoidMap;
 		
 		this.run = function(loops) {
 			runsAmount += loops;
 			
-			for(h = 0; h < loops; h++) {
-				lastVoidMap = 0;
+			for(h = 0; h < loops; h++) {	//RUNS
+				zoneCount = 0; //prevent errors with targetZone hard cap breaking zones mode
+			
+				_lastVoidMap = lastVoidMap;
 				goldenBonus = 0;
 				drops = 0;
 				seed = Math.floor(Math.random() * 1000000);
 				
 				_voidMaxLevel = voidMaxLevel;
 				
-				for(i = 1; i < targetZone; i++) {
+				loopZones:
+				for(i = 1; i < targetZone; i++) {	//ZONES
 					if(goldenInterval != -1 && i % goldenInterval == 0) {
 						if(arrGoldenUpgrades[i / goldenInterval - 1]) {
 							goldenBonus += 0.02 * (i / goldenInterval);
 						}
 					}
 					
-					for(j = 0; j < 100; j++) {
-						max = _voidMaxLevel;
-						if(_voidMaxLevel < i) {
-							_voidMaxLevel = i;
-							if((lastPortal + 25) < i)
-								_voidMaxLevel = highestLevelCleared;
+					if(i >= startZone) {
+						if(i === startZone)
+							j = startCell;
+						else
+							j = 0;
+						
+						for( ; j < 100; j++) {	//CELLS
+							max = _voidMaxLevel;
+							if(_voidMaxLevel < i) {
+								_voidMaxLevel = i;
+								if((lastPortal + 25) < i)
+									_voidMaxLevel = highestLevelCleared;
+							}
+							if ((max - lastPortal) < 25) {
+								max = lastPortal;
+							}
+							
+							if(max > 200) max = 200;
+							min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
+							min *= (1 - heirloomPrc);
+							min *= (1 - goldenBonus);
+							
+							var chance = (Math.floor((_lastVoidMap - min) / 10) / 50000);
+							_lastVoidMap++;
+							
+							if(mode === "zones" && i === targetZone - 1) {	//TODO find a better solution
+								if(arrOfZones[targetZone - 1] === undefined)
+									arrOfZones[targetZone - 1] = 1;
+								else
+									arrOfZones[targetZone - 1]++;
+								
+								totalZones += targetZone - 1;
+								zoneCount = 0;
+								
+								break loopZones;
+							}
+							
+							if(chance < 0)
+								continue;
+							if(Simulator.seededRandom(seed++) >= chance)
+								continue;
+							
+							
+							_lastVoidMap = 0;
+							drops++;
+							
+							if(mode === "zones") {
+								zoneCount++;
+								if(zoneCount >= targetVoidMapsInRestOfRun) {
+									
+									if(arrOfZones[i] === undefined)
+										arrOfZones[i] = 1;
+									else
+										arrOfZones[i]++;
+									
+									totalZones += i;
+									zoneCount = 0;
+									
+									break loopZones;
+								}
+								
+							}
+							
+							var cell = ((i - 1) * 100) + j;
+							if(cell < fastestVoidDropInSingleRunInCells)
+								fastestVoidDropInSingleRunInCells = cell;
+							
 						}
-						if ((max - lastPortal) < 25) {
-							max = lastPortal;
-						}
-						
-						if(max > 200) max = 200;
-						min = (max > 80) ? (1000 + ((max - 80) * 13)) : 1000;
-						min *= (1 - heirloomPrc);
-						min *= (1 - goldenBonus);
-						
-						var chance = (Math.floor((lastVoidMap - min) / 10) / 50000);
-						lastVoidMap++;
-						
-						if(chance < 0)
-							continue;
-						if(Simulator.seededRandom(seed++) >= chance)
-							continue;
-						
-						
-						lastVoidMap = 0;
-						drops++;
-						
-						var cell = ((i - 1) * 100) + j;
-						if(cell < fastestVoidDropInSingleRunInCells)
-							fastestVoidDropInSingleRunInCells = cell;
-						
 					}
 				}
 				
-				total += drops;
-				if(minimum > drops)
-					minimum = drops;
-				if(maximum < drops)
-					maximum = drops;
+				totalDrops += drops;
 				
-				if(typeof arrOfAmounts[drops] == "undefined")
-					arrOfAmounts[drops] = 1;
-				else
-					arrOfAmounts[drops]++;
-			}
-			
+				if(mode === "voids") {
+				
+					if(minimum > drops)
+						minimum = drops;
+					if(maximum < drops)
+						maximum = drops;
+					
+					if(arrOfAmounts[drops] === undefined)
+						arrOfAmounts[drops] = 1;
+					else
+						arrOfAmounts[drops]++;
+				}
+			}		
 			this.updateSwitches();
 		}
 		
@@ -183,7 +272,13 @@ var Simulator = (function() {
 			textResultTargetZone.innerHTML = targetZone;
 			textResultRuns.innerHTML = runsAmount;
 			
-			containerResult.innerHTML = "Average drops: " + total / runsAmount + "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br><br>";
+			containerResult.innerHTML = "Average drops: " + totalDrops / runsAmount;
+			
+			if(mode === "voids")
+				containerResult.innerHTML += "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br><br>";
+			
+			if(mode === "zones")
+				containerResult.innerHTML += "<br>Average zones: " + totalZones / runsAmount;
 			/*
 			var i;
 			for(i in arrOfAmounts)
@@ -191,6 +286,22 @@ var Simulator = (function() {
 					containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
 				
 			*/
+			if(mode === "zones")
+				updatePie(arrOfZones, "Average zone until which (including) " + targetVoidMapsInRestOfRun + " Void Map" + (targetVoidMapsInRestOfRun > 1 ? "s" : "") + " will drop in rest of run");
+			else 
+				updatePie(arrOfAmounts, "Average number of Void Maps per run");
+		}
+		
+		//damn you chart.js
+		this.destroy = function() {
+			chartPieDrops.destroy();
+		}
+		
+		this.finalize = function() {
+			this.updateSwitches();
+		}
+		
+		function updatePie(arr, title) {
 			//remember when this simulation used to run fast?
 			//i member
 			var _data = chartPieDrops.config.data;
@@ -199,10 +310,12 @@ var Simulator = (function() {
 			var data = _dataset.data;
 			var i;
 			
+			_dataset.label = title;
+			
 			var isUpdateColors = false;
 			
-			for(i in arrOfAmounts) {
-				var item = arrOfAmounts[i];
+			for(i in arr) {
+				var item = arr[i];
 				
 				var index = labels.indexOf(i);
 				if(index === -1) {
@@ -225,21 +338,11 @@ var Simulator = (function() {
 			
 			var l = labels.length;
 			for(i = 0; i < l; i++) {
-				data[i] = arrOfAmounts[labels[i]];
+				data[i] = arr[labels[i]];
 			}
 			
 			
 			chartPieDrops.update();
-		}
-		
-		//damn you chart.js
-		this.destroy = function() {
-			console.log("test");
-			chartPieDrops.destroy();
-		}
-		
-		this.finalize = function() {
-			this.updateSwitches();
 		}
 	}
 
@@ -265,6 +368,11 @@ var Simulator = (function() {
 	var textSelectedGoldenVoidPrc = document.getElementById("text_selected_golden_void_prc");
 	var containerGolden = document.getElementById("container_golden");
 	var inputSaveExport = document.getElementById("input_save_export");
+	
+	var formRadioMode = document.getElementById("form_radio_mode");
+	var inputRadioModeZones = document.getElementById("input_radio_mode_zones");
+	var tableModeZones = document.getElementById("table_mode_zones");
+	
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
 	var inputHighestZone = document.getElementById("input_highest_zone");
@@ -273,6 +381,10 @@ var Simulator = (function() {
 	var inputTargetZone = document.getElementById("input_target_zone");
 	var inputRuns = document.getElementById("input_runs");
 	var inputGoldenArr = [];
+	var inputTargetVoids = document.getElementById("input_target_voids");
+	var inputLastVoidMap = document.getElementById("input_last_map_cells_ago");
+	var inputStartingZone = document.getElementById("input_starting_zone");
+	var inputStartingCell = document.getElementById("input_starting_cell");
 	
 	var mainTimeout = null;
 	var simulator = null;
@@ -282,13 +394,25 @@ var Simulator = (function() {
 			var save = JSON.parse(localStorage.getItem("cache"));
 			var i, l;
 			if(save) {
-				inputHeirloomDrop.value = save.heirloomDrop;
-				inputAchievementBonus.value = save.achievementBonus;
-				inputHighestZone.value = save.highestZone;
-				inputLastPortal.value = save.lastPortal;
-				inputVoidMaxLevel.value = save.voidMaxLevel;
-				inputTargetZone.value = save.targetZone;
-				inputRuns.value = save.runs;
+				if(save.mode !== undefined) {
+					formRadioMode.elements["mode"].forEach(function(elem){
+						if(elem.value === save.mode) {
+							elem.checked = true;
+						}
+					});
+					onFormRadioModeChange();
+				}
+				if(save.heirloomPrc !== undefined) 		inputHeirloomDrop.value = save.heirloomPrc;
+				if(save.achievementBonus !== undefined) inputAchievementBonus.value = save.achievementBonus;
+				if(save.highestZone !== undefined) 		inputHighestZone.value = save.highestZone;
+				if(save.lastPortal !== undefined) 		inputLastPortal.value = save.lastPortal;
+				if(save.voidMaxLevel !== undefined) 	inputVoidMaxLevel.value = save.voidMaxLevel;
+				if(save.targetZone !== undefined) 		inputTargetZone.value = save.targetZone;
+				if(save.runs !== undefined) 			inputRuns.value = save.runs;
+				if(save.targetVoidMapsInRestOfRun !== undefined) inputTargetVoids.value = save.targetVoidMapsInRestOfRun;
+				if(save.lastVoidMap !== undefined) 		inputLastVoidMap.value = save.lastVoidMap;
+				if(save.startZone !== undefined) 		inputStartingZone.value = save.startZone;
+				if(save.startCell !== undefined) 		inputStartingCell.value = save.startCell;
 				
 				l = save.arrGoldenUpgrades.length;
 				for(i = l - 1; i >= 0; i--) {
@@ -325,6 +449,41 @@ var Simulator = (function() {
 	
 	btnAddGolden.onclick = onAddGolden;
 	btnCalculate.onclick = onCalculate;
+	
+	inputTargetZone.onchange = function() {
+		var number, min, max;
+		
+		number = inputTargetZone.value !== undefined ? parseInt(inputTargetZone.value) : 200;
+		min = inputTargetZone.min !== undefined ? parseInt(inputTargetZone.min) : 1;
+		max = inputTargetZone.max !== undefined ? parseInt(inputTargetZone.max) : 1000;
+		
+		if(number > max)
+			inputTargetZone.value = max;
+		else if(number < min)
+			inputTargetZone.value = min;
+	}
+	
+	formRadioMode.onchange = onFormRadioModeChange;
+	
+	function onFormRadioModeChange() {
+		if(inputRadioModeZones.checked) {
+			inputTargetVoids.disabled = false;
+			inputLastVoidMap.disabled = false;
+			inputStartingZone.disabled = false;
+			inputStartingCell.disabled = false;
+			
+			Util.swapClass("text-color-", "text-color-default", tableModeZones);
+		}
+		else {
+			inputTargetVoids.disabled = true;
+			inputLastVoidMap.disabled = true;
+			inputStartingZone.disabled = true;
+			inputStartingCell.disabled = true;
+			
+			Util.swapClass("text-color-", "text-color-disabled", tableModeZones);
+		}
+	}
+	
 	inputSaveExport.oninput = function() {
 		Util.swapClass("btn-border-", "btn-border-clickme", btnSavePull);
 	}
@@ -348,7 +507,10 @@ var Simulator = (function() {
 		inputHighestZone.value = Number(game.global.highestLevelCleared + 1);
 		inputLastPortal.value = Number(game.global.lastPortal);
 		inputVoidMaxLevel.value = Number(game.global.voidMaxLevel);
-		inputTargetZone.value = Number(game.global.world);
+		inputTargetZone.value = Number(game.global.highestLevelCleared + 1);
+		inputLastVoidMap.value = Number(game.global.lastVoidMap);
+		inputStartingZone.value = Number(game.global.world);
+		inputStartingCell.value = Number(game.global.lastClearedCell + 1);
 		
 		l = inputGoldenArr.length;
 		for(i = 0; i < l; i++) {
@@ -430,13 +592,19 @@ var Simulator = (function() {
 		}
 		btnCalculate.innerHTML = "Stop";
 		
-		var heirloomDrop 		= Number(inputHeirloomDrop.value);
+		var mode				= formRadioMode.elements["mode"].value;
+		var heirloomPrc 		= Number(inputHeirloomDrop.value);
 		var achievementBonus 	= Number(inputAchievementBonus.value);
 		var highestZone 		= parseInt(inputHighestZone.value);
 		var lastPortal			= parseInt(inputLastPortal.value);
 		var voidMaxLevel 		= parseInt(inputVoidMaxLevel.value);
 		var targetZone 			= parseInt(inputTargetZone.value);
 		var runs 				= parseInt(inputRuns.value);
+		var targetVoidMapsInRestOfRun = parseInt(inputTargetVoids.value);
+		var lastVoidMap			= parseInt(inputLastVoidMap.value);
+		var startZone			= parseInt(inputStartingZone.value);
+		var startCell			= parseInt(inputStartingCell.value);
+		
 		var arrGoldenUpgrades = [];
 		(function() {
 			var i, l = inputGoldenArr.length;
@@ -447,14 +615,19 @@ var Simulator = (function() {
 		
 		try {
 			localStorage.setItem("cache", JSON.stringify({
-				heirloomDrop : heirloomDrop,
+				mode : mode,
+				heirloomPrc : heirloomPrc,
 				achievementBonus : achievementBonus,
 				highestZone : highestZone,
 				voidMaxLevel : voidMaxLevel,
 				lastPortal : lastPortal,
 				targetZone : targetZone,
 				runs : runs,
-				arrGoldenUpgrades : arrGoldenUpgrades
+				arrGoldenUpgrades : arrGoldenUpgrades,
+				targetVoidMapsInRestOfRun : targetVoidMapsInRestOfRun,
+				lastVoidMap : lastVoidMap,
+				startZone : startZone,
+				startCell : startCell
 			}));
 		} 
 		catch(e) {
@@ -464,7 +637,20 @@ var Simulator = (function() {
 		if(simulator !== null)
 			simulator.destroy();
 		
-		simulator = new Simulator(heirloomDrop, targetZone, voidMaxLevel, achievementBonus, arrGoldenUpgrades, lastPortal, highestZone - 1);
+		simulator = new Simulator({
+			mode : mode,
+			heirloomPrc : heirloomPrc,
+			achievementBonus : achievementBonus,
+			highestLevelCleared : highestZone - 1,
+			lastPortal : lastPortal,
+			targetZone : targetZone,
+			voidMaxLevel : voidMaxLevel,
+			arrGoldenUpgrades : arrGoldenUpgrades,
+			targetVoidMapsInRestOfRun : targetVoidMapsInRestOfRun,
+			lastVoidMap : lastVoidMap,
+			startZone : startZone,
+			startCell : startCell
+		});
 		
 		function onNextFrame(loops) {
 			simulator.run(loops);

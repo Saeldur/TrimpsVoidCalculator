@@ -10,8 +10,21 @@ textarea {
 	border-color: gray;
 }
 
+input[type=number] {
+	width: 100px;
+}
+
 code {
 	background-color: black;
+}
+
+table tr td{
+	padding-left: 4px;
+}
+
+label {
+	margin-bottom: initial;
+	font-weight: inherit;
 }
 
 .h1, h1 {
@@ -65,6 +78,15 @@ li b {
 
 .btn-border-none {
 	
+}
+
+.text-color-disabled {
+	color: gray;
+}
+
+.text-color-help {
+	color: #7d7dfa;
+	cursor: help;
 }
 
 @keyframes animation-btn-border-clickme {
