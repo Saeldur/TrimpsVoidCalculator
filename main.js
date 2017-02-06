@@ -59,6 +59,9 @@ var Simulator = (function() {
 		}
 	*/
 	function Simulator(data) {
+		var CHART_UPDATE_INTERVAL = 15;
+		var chartUpdateClock = 0;
+		
 		var mode = data.mode;
 		
 		var heirloomPrc = data.heirloomPrc;
@@ -115,11 +118,23 @@ var Simulator = (function() {
 									return previousValue + currentValue;
 								}
 							);
+							var currentValue = 0;
+							
+							if(mode === "zones") {
+								var i, l = tooltipItem.index + 1;
+								for(i = 0; i < l; i++) {
+									currentValue += dataset.data[i];
+								}
+								var prc = Math.floor(((currentValue / total) * 100) + 0.5);
 
-							var currentValue = dataset.data[tooltipItem.index];
-							var prc = Math.floor(((currentValue / total) * 100) + 0.5);
+								return "Summed chance: " + prc + "% (" + currentValue + ")";
+							}
+							else if(mode === "voids") {
+								currentValue = dataset.data[tooltipItem.index];
+								var prc = Math.floor(((currentValue / total) * 100) + 0.5);
 
-							return prc + "% (" + currentValue + ")";
+								return "Chance: " + prc + "% (" + currentValue + ")";
+							}
 						}
 					}
 				},
@@ -291,8 +306,7 @@ var Simulator = (function() {
 			
 			if(mode === "voids")
 				containerResult.innerHTML += "<br>(min: " + minimum + ", max: " + maximum + ")<br><br>Earliest Void Map drop at zone " + (Math.floor(fastestVoidDropInSingleRunInCells / 100) + 1) + ", cell " + fastestVoidDropInSingleRunInCells % 100 + " (" + fastestVoidDropInSingleRunInCells + ")<br><br>";
-			
-			if(mode === "zones")
+			else if(mode === "zones")
 				containerResult.innerHTML += "<br>Average zones: " + totalZones / runsAmount;
 			/*
 			var i;
@@ -301,10 +315,16 @@ var Simulator = (function() {
 					containerResult.innerHTML += i + " VM's: " + arrOfAmounts[i] + " times<br>";
 				
 			*/
-			if(mode === "zones")
-				updatePie(arrOfZones, "Average zone until which (including) " + targetVoidMapsInRestOfRun + " Void Map" + (targetVoidMapsInRestOfRun > 1 ? "s" : "") + " will drop in rest of run");
-			else 
-				updatePie(arrOfAmounts, "Average number of Void Maps per run");
+			chartUpdateClock++;
+			
+			if(chartUpdateClock >= CHART_UPDATE_INTERVAL) {
+				if(mode === "zones")
+					updatePie(arrOfZones, "Average zone until which (including) " + targetVoidMapsInRestOfRun + " Void Map" + (targetVoidMapsInRestOfRun > 1 ? "s" : "") + " will drop in rest of run");
+				else if(mode === "voids")
+					updatePie(arrOfAmounts, "Average number of Void Maps per run");
+				
+				chartUpdateClock = 0;
+			}
 		}
 		
 		//damn you chart.js
