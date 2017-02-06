@@ -42,9 +42,15 @@
 									<td><input id="input_void_max_level" type="number"></input></td>
 								</tr>
 							</table>
-							<table id="table_mode_zones" class="text-color-disabled" style="float:right;margin-bottom:16px">
+							<table id="table_mode_voids" style="float:right;margin-bottom:16px">
 								<tr>
-									<td><span>Target Void Maps to reach: </span></td>
+									<td><span>Target zone to reach: </span></td>
+									<td><input id="input_target_zone" type="number" min="1" max="1000"></input></td>
+								</tr>
+							</table>
+							<table id="table_mode_zones" style="float:right;margin-bottom:16px">
+								<tr>
+									<td><span>Additional Void Maps to reach: </span></td>
 									<td><input id="input_target_voids" type="number" value="1"></input></td>
 								</tr>
 								<tr>
@@ -60,10 +66,6 @@
 								</tr>
 							</table>
 							<table style="float:right;margin-bottom:16px">
-								<tr>
-									<td><span>Target zone to reach: </span></td>
-									<td><input id="input_target_zone" type="number" min="1" max="1000"></input></td>
-								</tr>
 								<tr>
 									<td><span>Runs: </span></td>
 									<td><input id="input_runs" type="number" value="10000"></input></td>
@@ -124,9 +126,9 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="lz-string.js?44"></script>
-	<script type="text/javascript" src="Chart.js?44"></script>
+	<script type="text/javascript" src="lz-string.js?45"></script>
+	<script type="text/javascript" src="Chart.js?45"></script>
 	
-	<script type="text/javascript" src="main.js?44"></script>
+	<script type="text/javascript" src="main.js?45"></script>
 </body>
 

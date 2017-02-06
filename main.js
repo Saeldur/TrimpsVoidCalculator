@@ -68,8 +68,6 @@ var Simulator = (function() {
 		var voidMaxLevel = data.voidMaxLevel;
 		var arrGoldenUpgrades = data.arrGoldenUpgrades;
 		
-		console.log(voidMaxLevel);
-		
 		var lastVoidMap = 0;
 		var startZone = 1;
 		var startCell = 0;
@@ -108,6 +106,23 @@ var Simulator = (function() {
 				}]
 			},
 			options: {
+				tooltips: {
+					callbacks: {
+						label: function(tooltipItem, data) {
+							var dataset = data.datasets[tooltipItem.datasetIndex];
+							var total = dataset.data.reduce(
+								function(previousValue, currentValue, currentIndex, array) {
+									return previousValue + currentValue;
+								}
+							);
+
+							var currentValue = dataset.data[tooltipItem.index];
+							var prc = Math.floor(((currentValue / total) * 100) + 0.5);
+
+							return prc + "% (" + currentValue + ")";
+						}
+					}
+				},
 				scales: {
 					yAxes: [{
 						ticks: {
@@ -372,6 +387,7 @@ var Simulator = (function() {
 	var formRadioMode = document.getElementById("form_radio_mode");
 	var inputRadioModeZones = document.getElementById("input_radio_mode_zones");
 	var tableModeZones = document.getElementById("table_mode_zones");
+	var tableModeVoids = document.getElementById("table_mode_voids");
 	
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
@@ -395,11 +411,13 @@ var Simulator = (function() {
 			var i, l;
 			if(save) {
 				if(save.mode !== undefined) {
-					formRadioMode.elements["mode"].forEach(function(elem){
+					var i, elems = formRadioMode.elements["mode"], l = elems.length, elem;
+					for(i = 0; i < l; i++) {
+						elem = elems[i];
 						if(elem.value === save.mode) {
 							elem.checked = true;
 						}
-					});
+					}
 				}
 				if(save.heirloomPrc !== undefined) 		inputHeirloomDrop.value = save.heirloomPrc;
 				if(save.achievementBonus !== undefined) inputAchievementBonus.value = save.achievementBonus;
@@ -468,20 +486,16 @@ var Simulator = (function() {
 	
 	function onFormRadioModeChange() {
 		if(inputRadioModeZones.checked) {
-			inputTargetVoids.disabled = false;
-			inputLastVoidMap.disabled = false;
-			inputStartingZone.disabled = false;
-			inputStartingCell.disabled = false;
+			tableModeVoids.style.display = "none";
+			tableModeZones.style.display = "initial";
 			
-			Util.swapClass("text-color-", "text-color-default", tableModeZones);
+			//Util.swapClass("text-color-", "text-color-default", tableModeZones);
 		}
 		else {
-			inputTargetVoids.disabled = true;
-			inputLastVoidMap.disabled = true;
-			inputStartingZone.disabled = true;
-			inputStartingCell.disabled = true;
+			tableModeZones.style.display = "none";
+			tableModeVoids.style.display = "initial";
 			
-			Util.swapClass("text-color-", "text-color-disabled", tableModeZones);
+			//Util.swapClass("text-color-", "text-color-disabled", tableModeZones);
 		}
 	}
 	
@@ -508,7 +522,7 @@ var Simulator = (function() {
 		inputHighestZone.value = Number(game.global.highestLevelCleared + 1);
 		inputLastPortal.value = Number(game.global.lastPortal);
 		inputVoidMaxLevel.value = Number(game.global.voidMaxLevel);
-		inputTargetZone.value = Number(game.global.highestLevelCleared + 1);
+		inputTargetZone.value = Number(game.global.world);
 		inputLastVoidMap.value = Number(game.global.lastVoidMap);
 		inputStartingZone.value = Number(game.global.world);
 		inputStartingCell.value = Number(game.global.lastClearedCell + 1);
