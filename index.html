@@ -19,65 +19,68 @@
 							<label>Average Number of Void Maps per run <input type="radio" name="mode" value="voids" checked="true"></label><br>
 							<label>Average Zone required to reach to get x Void Maps <input id="input_radio_mode_zones" type="radio" name="mode" value="zones"></label>
 						</form><br>
-						<div style="width:60%;float:right">
-							<div style="height:auto">
-								<div class="left">Heirloom drop chance (%): </div>
-								<input class="right" id="input_heirloom_drop" type="number" step="0.1"></input>
-							</div>
-							<div>
-								<div class="left">Achievement bonus (%): </div>
-								<input class="right" id="input_achievement_bonus" type="number" step="0.1"></input>
-							</div>
-							<div>
-								<div class="left">Highest zone reached: </div>
-								<input class="right" id="input_highest_zone" type="number"></input>
-							</div>
-							<div>
-								<div class="left">Zone reached previous run: </div>
-								<input class="right" id="input_last_portal" type="number"></input>
-							</div>
-							<div>
-								<div class="left" title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200. If you imported your save, you probably don't need to worry about this number. Check the help section on the right if you need more info.">Void Max Level <span class="text-color-help">(?)</span>: </div>
-								<input class="right" id="input_void_max_level" type="number"></input>
-							</div>
-							<span style="visibility:hidden">_</span>
-							<div id="table_mode_voids">
-								<div>
-									<div class="left">Target zone to reach: </div>
-									<input class="right" id="input_target_zone" type="number" min="1" max="1000"></input>
+						
+						<div class="parent parent-row">
+							<div class="parent parent-col child">
+								<div class="child">
+									<span>Golden Upgrades Void:<br>(selected <span id="text_selected_golden_void_prc">0%</span>)</span>
+									<div id="container_golden"></div>
+									<div id="btn_add_golden" class="btn btn-default">Add next</div>
 								</div>
 							</div>
-							<div id="table_mode_zones">
-								<div>
-									<div class="left">Additional Void Maps to reach: </div>
-									<input class="right" id="input_target_voids" type="number" value="1"></input>
+							<div class="parent parent-col child" style="flex-basis:100px">
+								<div class="child">
+									<div class="left">Heirloom drop chance (%): </div>
+									<input class="right" id="input_heirloom_drop" type="number" step="0.1"></input>
 								</div>
-								<div>
-									<div class="left">Last Void Map x cells ago: </div>
-									<input class="right" id="input_last_map_cells_ago" type="number"></input>
+								<div class="child">
+									<div class="left">Achievement bonus (%): </div>
+									<input class="right" id="input_achievement_bonus" type="number" step="0.1"></input>
 								</div>
-								<div>
-									<div class="left">Starting zone/cell: </div>
-									<div class="right">
-										<input id="input_starting_zone" type="number" placeholder="zone" style="float:left;width:50%"></input>
-										<input id="input_starting_cell" type="number" placeholder="cell" style="float:left;width:50%"></input>
+								<div class="child">
+									<div class="left">Highest zone reached: </div>
+									<input class="right" id="input_highest_zone" type="number"></input>
+								</div>
+								<div class="child">
+									<div class="left">Zone reached previous run: </div>
+									<input class="right" id="input_last_portal" type="number"></input>
+								</div>
+								<div class="child">
+									<div class="left" title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200. If you imported your save, you probably don't need to worry about this number. Check the help section on the right if you need more info.">Void Max Level <span class="text-color-help">(?)</span>: </div>
+									<input class="right" id="input_void_max_level" type="number"></input>
+								</div>
+								<br>
+								<div class="child" id="table_mode_voids">
+									<div>
+										<div class="left">Target zone to reach: </div>
+										<input class="right" id="input_target_zone" type="number" min="1" max="1000"></input>
 									</div>
 								</div>
+								<div class="child" id="table_mode_zones">
+									<div>
+										<div class="left">Additional Void Maps to reach: </div>
+										<input class="right" id="input_target_voids" type="number" value="1"></input>
+									</div>
+									<div>
+										<div class="left">Last Void Map x cells ago: </div>
+										<input class="right" id="input_last_map_cells_ago" type="number"></input>
+									</div>
+									<div>
+										<div class="left">Starting zone/cell: </div>
+										<div class="right">
+											<input id="input_starting_zone" type="number" placeholder="zone" style="float:left;width:50%"></input>
+											<input id="input_starting_cell" type="number" placeholder="cell" style="float:left;width:50%"></input>
+										</div>
+									</div>
+								</div>
+								<br>
+								<div class="child">
+									<div class="left">Runs: </div>
+									<input class="right" id="input_runs" type="number" value="10000"></input>
+								</div>
+								<br>
 							</div>
-							<span style="visibility:hidden">_</span>
-							<div>
-								<div class="left">Runs: </div>
-								<input class="right" id="input_runs" type="number" value="10000"></input>
-							</div>
-							<span style="visibility:hidden">_</span>
 						</div>
-	
-						<div style="width:40%;float:left">
-							<span>Golden Upgrades Void:<br>(selected <span id="text_selected_golden_void_prc">0%</span>)</span>
-							<div id="container_golden"></div>
-							<div id="btn_add_golden" class="btn btn-default">Add next</div>
-						</div>
-						
 					</div>
 					<div class="col-md-6">
 						<div class="progress">
