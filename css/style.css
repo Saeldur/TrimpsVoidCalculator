@@ -12,6 +12,7 @@ textarea {
 
 input[type=number] {
 	width: 100px;
+	height: 26px;
 }
 
 code {
@@ -34,8 +35,19 @@ label {
 	color: #8284ff;
 }
 
-li b {
+b {
 	color: #c879ff;
+}
+
+.left {
+	width: calc(100% - 100px);
+	float: left;
+	line-height: 26px;
+	padding-right: 4px;
+}
+.right {
+	width: 100px;
+	float: right;
 }
 
 .noselect {

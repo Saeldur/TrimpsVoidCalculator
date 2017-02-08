@@ -16,62 +16,62 @@
 						<div id="btn_save_pull" class="btn btn-default btn-border-none">Confirm save</div><div id="btn_save_clear" class="btn btn-default">Clear</div><br><br>
 						<span>Mode:</span>
 						<form id="form_radio_mode" action="">
-							<label>Average Number of Void Maps per run <input type="radio" name="mode" value="voids" checked="true"></label>
+							<label>Average Number of Void Maps per run <input type="radio" name="mode" value="voids" checked="true"></label><br>
 							<label>Average Zone required to reach to get x Void Maps <input id="input_radio_mode_zones" type="radio" name="mode" value="zones"></label>
 						</form><br>
 						<div style="width:60%;float:right">
-							<table style="float:right;margin-bottom:16px">
-								<tr>
-									<td><span>Heirloom drop chance (%): </span></td>
-									<td><input id="input_heirloom_drop" type="number" step="0.1"></input></td>
-								</tr>
-								<tr>
-									<td><span>Achievement bonus (%): </span></td>
-									<td><input id="input_achievement_bonus" type="number" step="0.1"></input></td>
-								</tr>
-								<tr>
-									<td><span>Highest zone reached: </span></td>
-									<td><input id="input_highest_zone" type="number"></input></td>
-								</tr>
-								<tr>
-									<td><span>Zone reached previous run: </span></td>
-									<td><input id="input_last_portal" type="number"></input></td>
-								</tr>
-								<tr title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200. If you imported your save, you probably don't need to worry about this number. Check the help section on the right if you need more info.">
-									<td><span>Void Max Level <span class="text-color-help">(?)</span>: </span></td>
-									<td><input id="input_void_max_level" type="number"></input></td>
-								</tr>
-							</table>
-							<table id="table_mode_voids" style="float:right;margin-bottom:16px">
-								<tr>
-									<td><span>Target zone to reach: </span></td>
-									<td><input id="input_target_zone" type="number" min="1" max="1000"></input></td>
-								</tr>
-							</table>
-							<table id="table_mode_zones" style="float:right;margin-bottom:16px">
-								<tr>
-									<td><span>Additional Void Maps to reach: </span></td>
-									<td><input id="input_target_voids" type="number" value="1"></input></td>
-								</tr>
-								<tr>
-									<td><span>Last Void Map x cells ago: </span></td>
-									<td><input id="input_last_map_cells_ago" type="number"></input></td>
-								</tr>
-								<tr>
-									<td><span>Starting zone/cell: </span></td>
-									<td style="width:100px">
+							<div style="height:auto">
+								<div class="left">Heirloom drop chance (%): </div>
+								<input class="right" id="input_heirloom_drop" type="number" step="0.1"></input>
+							</div>
+							<div>
+								<div class="left">Achievement bonus (%): </div>
+								<input class="right" id="input_achievement_bonus" type="number" step="0.1"></input>
+							</div>
+							<div>
+								<div class="left">Highest zone reached: </div>
+								<input class="right" id="input_highest_zone" type="number"></input>
+							</div>
+							<div>
+								<div class="left">Zone reached previous run: </div>
+								<input class="right" id="input_last_portal" type="number"></input>
+							</div>
+							<div>
+								<div class="left" title="This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200. If you imported your save, you probably don't need to worry about this number. Check the help section on the right if you need more info.">Void Max Level <span class="text-color-help">(?)</span>: </div>
+								<input class="right" id="input_void_max_level" type="number"></input>
+							</div>
+							<span style="visibility:hidden">_</span>
+							<div id="table_mode_voids">
+								<div>
+									<div class="left">Target zone to reach: </div>
+									<input class="right" id="input_target_zone" type="number" min="1" max="1000"></input>
+								</div>
+							</div>
+							<div id="table_mode_zones">
+								<div>
+									<div class="left">Additional Void Maps to reach: </div>
+									<input class="right" id="input_target_voids" type="number" value="1"></input>
+								</div>
+								<div>
+									<div class="left">Last Void Map x cells ago: </div>
+									<input class="right" id="input_last_map_cells_ago" type="number"></input>
+								</div>
+								<div>
+									<div class="left">Starting zone/cell: </div>
+									<div class="right">
 										<input id="input_starting_zone" type="number" placeholder="zone" style="float:left;width:50%"></input>
 										<input id="input_starting_cell" type="number" placeholder="cell" style="float:left;width:50%"></input>
-									</td>
-								</tr>
-							</table>
-							<table style="float:right;margin-bottom:16px">
-								<tr>
-									<td><span>Runs: </span></td>
-									<td><input id="input_runs" type="number" value="10000"></input></td>
-								</tr>
-							</table>
+									</div>
+								</div>
+							</div>
+							<span style="visibility:hidden">_</span>
+							<div>
+								<div class="left">Runs: </div>
+								<input class="right" id="input_runs" type="number" value="10000"></input>
+							</div>
+							<span style="visibility:hidden">_</span>
 						</div>
+	
 						<div style="width:40%;float:left">
 							<span>Golden Upgrades Void:<br>(selected <span id="text_selected_golden_void_prc">0%</span>)</span>
 							<div id="container_golden"></div>
@@ -105,15 +105,35 @@
 				<div id="desc_help" style="display:none">
 				<h1>How to use:</h1>
 				<ul>
-				<li><b>Heirloom drop chance</b> - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
-				<li><b>Achievement bonus</b> - Your total damage % gained from achievements.</li>
-				<li><b>Highest zone reached</b> - Highest zone from Stats -> Total</li>
-				<li><b>Zone reached previous run</b> - The zone at which you used the Portal previous run. The calculator will assume this was the last run every simulated run.</li>
-				<li><b>Void Max Level</b> - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
-				<li><b>Target zone</b> - The zone you intend to portal at the beginning of. If Void Max Level inputted is lower than this, it will be automatically adjusted.</li>
-				<li><b>Runs</b> - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
-				<li><b>Golden Upgrades Void</b> - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li>
+					<li><b>Heirloom drop chance</b> - The % of Void Map Drop Chance on your Shield Heirloom. Leave at 0 if you don't have this modifier.</li>
+					<li><b>Achievement bonus</b> - Your total damage % gained from achievements.</li>
+					<li><b>Highest zone reached</b> - Highest zone from Stats -> Total</li>
+					<li><b>Zone reached previous run</b> - The zone at which you used the Portal previous run. The calculator will assume this was the last run every simulated run.</li>
+					<li><b>Void Max Level</b> - This number is usually the zone you used the Portal in the previous run, if you ended your last run within 25 zones from your highest zone reached. Otherwise, input highest zone reached. If your runs go to zone 200+, input 200, although all values above 200 will be treated as 200.</li>
+					<li><b>Golden Upgrades Void</b> - Select the Golden Upgrades which you purchase as Void, or none if you don't purchase any. For example. if only your third Golden Upgrade is Void, leave the two first boxes blank, then tick the third one.</li><br>
+					<li><b>Runs</b> - The amount of runs to perform. The higher the number, the more reliable the data will be.</li>
 				</ul>
+				<table style="border: 1px solid dimgray;width:100%">
+					<tr>
+						<th colspan="2" style="text-align:center;border: 1px solid dimgray">Mode</th>
+					</tr>
+					<tr>
+						<th style="text-align:center">Average Number of Void Maps per run</th>
+						<th style="text-align:center">Average Zone required to reach to get x Void Maps</th> 
+					</tr>
+					<tr>
+						<td><b>Target zone to reach</b> - The zone you intend to portal at the beginning of.</td>
+						<td><b>Additional Void Maps to reach</b> - The number of Void Maps you want to find from the specified starting zone.</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><b>Last Void Map x cells ago</b> - Just pull this from the save file. Use 0 if you haven't found a Void Map yet (for example, when starting from zone 0)</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><b>Starting zone/cell</b> - The zone/cell to start calculating target zones to get x Void Maps from.</td>
+					</tr>
+				</table>
 				<h1>Few notes on Golden Upgrades:</h1>
 				<ul>
 				<li>Because you can't have more than 60% Golden Void %, you can't select a combination of upgrades that exceeds this number.</li>
@@ -126,9 +146,9 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="lz-string.js?46"></script>
-	<script type="text/javascript" src="Chart.js?46"></script>
+	<script type="text/javascript" src="lz-string.js?47"></script>
+	<script type="text/javascript" src="Chart.js?47"></script>
 	
-	<script type="text/javascript" src="main.js?46"></script>
+	<script type="text/javascript" src="main.js?47"></script>
 </body>
 
