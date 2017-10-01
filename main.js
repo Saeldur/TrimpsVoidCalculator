@@ -151,6 +151,7 @@ var Simulator = (function() {
 		heirloomPrc = heirloomPrc / 100;
 		
 		var goldenInterval = -1;
+		var z1golden = Math.max(0, Math.floor((achievementBonus - 2000) / 500));
 		
 		if(achievementBonus >= 2000)
 			goldenInterval = 25;
@@ -197,11 +198,16 @@ var Simulator = (function() {
 				
 				_voidMaxLevel = voidMaxLevel;
 				
+				for (i = 0; i < z1golden; i++) { // Z1 GU
+					if(arrGoldenUpgrades[i])
+						goldenBonus += 0.02 * (i + 1);
+				}
+
 				loopZones:
 				for(i = 1; i < targetZone; i++) {	//ZONES
 					if(goldenInterval != -1 && i % goldenInterval == 0) {
-						if(arrGoldenUpgrades[i / goldenInterval - 1]) {
-							goldenBonus += 0.02 * (i / goldenInterval);
+						if(arrGoldenUpgrades[i / goldenInterval + z1golden - 1]) {
+							goldenBonus += 0.02 * (i / goldenInterval + z1golden);
 						}
 					}
 					
