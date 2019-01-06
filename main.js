@@ -194,7 +194,7 @@ var Simulator = (function() {
 
 				_lastVoidMap = lastVoidMap;
 				goldenBonus = 0;
-				drops = (voidSpecialLevel > 0) * (lastPortal/100 | 0) + (voidSpecialLevel > 1) * ((lastPortal+50)/100 | 0);
+				drops = (voidSpecialLevel > 0) * (lastPortal/100 | 0) + (voidSpecialLevel > 1) * ((lastPortal+50)/100 | 0) + ((fluffyLevel + fluffyPrestige)>=12) * 4 + ((fluffyLevel + fluffyPrestige)>=17) * 16;
 				seed = Math.floor(Math.random() * 1000000);
 
 				_voidMaxLevel = voidMaxLevel;
@@ -419,6 +419,8 @@ var Simulator = (function() {
 	var inputHeirloomDrop = document.getElementById("input_heirloom_drop");
 	var inputAchievementBonus = document.getElementById("input_achievement_bonus");
 	var inputVoidSpecial = document.getElementById("void_special");
+	var inputFluffyLevel = document.getElementById("fluffy_level");
+	var inputFluffyPrestige = document.getElementById("fluffy_prestige");
 	var inputHighestZone = document.getElementById("input_highest_zone");
 	var inputLastPortal = document.getElementById("input_last_portal");
 	var inputVoidMaxLevel = document.getElementById("input_void_max_level");
@@ -458,6 +460,9 @@ var Simulator = (function() {
 				if(save.lastVoidMap !== undefined) 		inputLastVoidMap.value = save.lastVoidMap;
 				if(save.startZone !== undefined) 		inputStartingZone.value = save.startZone;
 				if(save.startCell !== undefined) 		inputStartingCell.value = save.startCell;
+				if(save.voidSpecialLevel !== undefined) inputVoidSpecial.value = save.voidSpecialLevel;
+				if(save.fluffyLevel !== undefined) inputFluffyLevel.value = save.fluffyLevel;
+				if(save.fluffyPrestige !== undefined) inputFluffyPrestige.value = save.fluffyPrestige;
 
 				l = save.arrGoldenUpgrades.length;
 				for(i = l - 1; i >= 0; i--) {
@@ -555,6 +560,8 @@ var Simulator = (function() {
 		inputStartingZone.value = Number(game.global.world);
 		inputStartingCell.value = Number(game.global.lastClearedCell + 1);
 		inputVoidSpecial.value = Number(game.talents.voidSpecial.purchased + game.talents.voidSpecial2.purchased);
+		inputFluffyLevel.value = Number(Math.min(Math.floor(log10(((game.global.fluffyExp / 1000 * Math.pow(5, game.global.fluffyPrestige)) * 3) + 1) / log10(4)), game.portal.Capable.level));
+		inputFluffyPrestige.value = Number(game.global.fluffyPrestige);
 
 		l = inputGoldenArr.length;
 		for(i = 0; i < l; i++) {
@@ -649,6 +656,8 @@ var Simulator = (function() {
 		var startZone			= parseInt(inputStartingZone.value);
 		var startCell			= parseInt(inputStartingCell.value);
 		var voidSpecialLevel = parseInt(inputVoidSpecial.value);
+		var fluffyLevel = parseInt(inputFluffyLevel.value);
+		var fluffyPrestige = parseInt(inputFluffyPrestige.value);
 
 		var arrGoldenUpgrades = [];
 		(function() {
@@ -673,7 +682,9 @@ var Simulator = (function() {
 				lastVoidMap : lastVoidMap,
 				startZone : startZone,
 				startCell : startCell,
-				voidSpecialLevel : voidSpecialLevel
+				voidSpecialLevel : voidSpecialLevel,
+				fluffyLevel: fluffyLevel,
+				fluffyPrestige: fluffyPrestige
 			}));
 		}
 		catch(e) {
@@ -696,7 +707,9 @@ var Simulator = (function() {
 			lastVoidMap : lastVoidMap,
 			startZone : startZone,
 			startCell : startCell,
-			voidSpecialLevel : voidSpecialLevel
+			voidSpecialLevel : voidSpecialLevel,
+			fluffyLevel: fluffyLevel,
+			fluffyPrestige: fluffyPrestige
 		});
 
 		function onNextFrame(loops) {
