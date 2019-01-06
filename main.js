@@ -592,7 +592,7 @@ var Simulator = (function() {
 	function onGoldenStateChange(e) {
 		var total = getSelectedTotalGoldenVoidPercentage();
 		
-		if(e.target.checked && total > 60)
+		if(e.target.checked && total > 72)
 			e.target.checked = false;
 		
 		textSelectedGoldenVoidPrc.innerHTML = getSelectedTotalGoldenVoidPercentage() + "%";
@@ -600,7 +600,7 @@ var Simulator = (function() {
 	
 	function onAddGolden(e, isPreselect) {
 		var prc = ((inputGoldenArr.length + 1) * 2);
-		if(prc > 60)
+		if(prc > 72)
 			return;
 		
 		var span = document.createElement("span");
