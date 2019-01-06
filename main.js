@@ -194,7 +194,7 @@ var Simulator = (function() {
 
 				_lastVoidMap = lastVoidMap;
 				goldenBonus = 0;
-				drops = (voidSpecialLevel > 1) * (lastPortal/100 | 0) + (voidSpecialLevel > 2) * ((lastPortal+50)/100 | 0);
+				drops = (voidSpecialLevel > 0) * (lastPortal/100 | 0) + (voidSpecialLevel > 1) * ((lastPortal+50)/100 | 0);
 				seed = Math.floor(Math.random() * 1000000);
 
 				_voidMaxLevel = voidMaxLevel;
