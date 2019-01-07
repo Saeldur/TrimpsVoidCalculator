@@ -71,6 +71,8 @@ var Simulator = (function() {
 		var voidMaxLevel = data.voidMaxLevel;
 		var arrGoldenUpgrades = data.arrGoldenUpgrades;
 		var voidSpecialLevel = data.voidSpecialLevel;
+		var fluffyLevel = data.fluffyLevel;
+		var fluffyPrestige = data.fluffyPrestige;
 
 		var lastVoidMap = 0;
 		var startZone = 1;
