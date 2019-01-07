@@ -560,7 +560,7 @@ var Simulator = (function() {
 		inputStartingZone.value = Number(game.global.world);
 		inputStartingCell.value = Number(game.global.lastClearedCell + 1);
 		inputVoidSpecial.value = Number(game.talents.voidSpecial.purchased + game.talents.voidSpecial2.purchased);
-		inputFluffyLevel.value = Number(Math.min(Math.floor(log10(((game.global.fluffyExp / 1000 * Math.pow(5, game.global.fluffyPrestige)) * 3) + 1) / log10(4)), game.portal.Capable.level));
+		inputFluffyLevel.value = Number(Math.min(Math.floor(Math.log(((game.global.fluffyExp / 1000 * Math.pow(5, game.global.fluffyPrestige)) * 3) + 1) / Math.log(4), game.portal.Capable.level)));
 		inputFluffyPrestige.value = Number(game.global.fluffyPrestige);
 
 		l = inputGoldenArr.length;
